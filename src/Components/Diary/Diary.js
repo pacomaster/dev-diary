@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './Diary.css';
 
 export default function Diary(){
 
@@ -13,51 +14,50 @@ export default function Diary(){
     const [content, setContent] = useState('');
     const [entries, setEntries] = useState([]);
 
-    function removeEntry(checkDate){
-            //var goodEntries = entries.filter((entry) => checkDate !== entry["date"]);
-            //console.log("goodEntries");
-            //console.log(goodEntries);
-            setEntries(entries.filter((entry) => checkDate !== entry["date"]));
-        }
-
     function findEntry(checkDate){
         var value = entries.filter((entry) => checkDate === entry["date"]);
         return value
     }
 
-    function addEntry(e){
-        removeEntry(date);
+    function addEntry(){
+        var goodEntries = entries.filter((entry) => date !== entry["date"]);
         console.log("entries");
         console.log(entries);
 
         var item = {"date" : date, "content": content};
-        setEntries([...entries, item]);
+        setEntries([...goodEntries, item]);
     }
 
     function changeDate(e){
         var value = findEntry(e.target.value);
         if(value.length > 0){
             setContent(value[0]["content"]);
+        } else {
+            setContent('');
         }
         setDate(e.target.value);
     }
 
     return (
         <div className="dev-diary">
-            <header>
-                <button id="read">Read</button>
-                <button id="write">Write</button>
-                <input type="date" id="date" value={date} onChange={changeDate} />
-            </header>
             <body>
-                <textarea name="content" value={content} onChange={e => setContent(e.target.value)} />
-                <button id="save" onClick={addEntry}>Save</button>
-                <div>ENTRIES:</div>
+                <h1>Dev diary</h1>
+                <h4>by pacomaster</h4>
+                <div>
+                    <input type="date" id="date" value={date} onChange={changeDate} />
+                </div>
+                <textarea name="content" rows="20" cols="100" value={content} onChange={e => setContent(e.target.value)} />
+                <div>
+                    <button id="save" type="submit" onClick={addEntry}>Save</button>
+                </div>
+                <div className="entries-title">ENTRIES:</div>
+                <hr className="dotted"/>
                 {entries.map((entry) => {
                     return(
                         <div>
                             <div>{entry["date"]}</div>
                             <div>{entry["content"]}</div>
+                            <hr className="dotted"/>
                         </div>
                     );
                 })}
